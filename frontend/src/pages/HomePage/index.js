@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../../components/Header';
 import {Container, InputGroup, FormControl, Button, Alert, Spinner} from 'react-bootstrap';
-import {ContentContainer, Form} from './styles';
+import {ContentContainer, Form, AdsBlock} from './styles';
 import ShortenerService from '../../services/shortenerService';
 
 class HomePage extends React.Component {
@@ -37,6 +37,12 @@ class HomePage extends React.Component {
         }
     }
 
+    copyToClipboard = () => {
+        const element = this.inputURL;
+        element.select();
+        document.execCommand('copy');
+    }
+
     render() {
         const { isLoading, errorMessage, code } = this.state;
         
@@ -45,7 +51,7 @@ class HomePage extends React.Component {
                 <Header>Seu novo encurtador de URL. :)</Header>
                 <ContentContainer>
                     <Form onSubmit={this.handleSubmit}>
-                        <InputGroup>
+                        <InputGroup className="mb-3">
                             <FormControl
                                 placeholder="Digite a url para encurtar"
                                 defaultValue=""
@@ -61,21 +67,27 @@ class HomePage extends React.Component {
                         ) : (
                             code &&  (
                                 <>
-                                    <InputGroup>
+                                    <InputGroup className="mb-3">
                                         <FormControl
                                             autoFocus={true}
-                                            defaultValue={`https://pitu.tk/$(code)`}
+                                            defaultValue={`https://pitu.tk/${code}`}
                                             ref={(input) => this.inputURL = input}
                                         />
                                         <InputGroup.Append>
                                             <Button variant="outline-secondary" onClick={() => this.copyToClipboard()}>Copiar</Button>
                                         </InputGroup.Append>
                                     </InputGroup>
-                            <p>Para acompanhar as estatísticas, acesse https://pitu.tk/{code}</p>
+                            <p>Para acompanhar as estatísticas, acesse <a href={"https://pitu.tk//"+code+"/stats"}>https://pitu.tk/{code}/stats</a></p>
                                 </>
                             )
                         )}
+                        {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
                     </Form>
+                </ContentContainer>
+                <ContentContainer>
+                    <AdsBlock>
+                        Adsense
+                    </AdsBlock>
                 </ContentContainer>
             </Container>
         )
